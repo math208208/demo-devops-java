@@ -27,4 +27,6 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Push Docker Image
         working-directory: ./demo-app
-        run: docker push math208/demo-app:latest
+        run: |
+          docker build -t math208/demo-app:latest .
+          docker push math208/demo-app:latest
