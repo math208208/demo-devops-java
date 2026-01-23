@@ -22,6 +22,7 @@ jobs:
       - name: Build and Test with Maven
         run: mvn clean install --file demo-app/pom.xml
 
+
       - name: Build JAR
         run: mvn clean package -f demo-app/pom.xml
       - name: Build Docker Image
