@@ -1,20 +1,22 @@
 package com.example;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import com.sun.net.httpserver.HttpServer;
 
-@SpringBootApplication
-@RestController
+
 public class App {
 
-    public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
-    }
+	public static void main(String[] args) throws Exception {
+		HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", 8080), 0);        
+        server.createContext("/", exchange -> {
+            String resp = "Hello World";
+            exchange.sendResponseHeaders(200, resp.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(resp.getBytes());
+            }
+        });
 
-    @GetMapping("/")
-    public String home() {
-        return "Hello World depuis Kubernetes !";
+        server.start();
     }
 }
