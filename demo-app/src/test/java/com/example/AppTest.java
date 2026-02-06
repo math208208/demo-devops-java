@@ -8,15 +8,30 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
 
 public class AppTest {
 
-	@Test
+	@BeforeAll
+    public static void setup() {
+        Thread t = new Thread(() -> {
+            try {
+                App.main(new String[]{});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        t.setDaemon(true); 
+        t.start();
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+    }
+
+    @Test
     public void testFullFlow() throws Exception {
-        
         HttpClient client = HttpClient.newHttpClient();
 
         double initialVisits = getVisits(client);
@@ -28,8 +43,8 @@ public class AppTest {
 
         double newVisits = getVisits(client);
         
-        System.out.println("Visites avant: " + initialVisits + " | Après: " + newVisits);
-        assertEquals(initialVisits + 1, newVisits, "Le compteur doit augmenter de 1 après une visite");
+        System.out.println("Visites: " + initialVisits + " -> " + newVisits);
+        assertEquals(initialVisits + 1, newVisits, "Le compteur doit s'incrémenter");
     }
 
     private double getVisits(HttpClient client) throws Exception {
