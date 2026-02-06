@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 5s # Il va lire ton app toutes les 5 secondes
+
+scrape_configs:
+  - job_name: 'mon-app-java'
+    static_configs:
+      - targets: ['host.docker.internal:8081'] 
+      # host.docker.internal permet au Prometheus (dans Docker) de 
+      # voir ton application (qui tourne sur ton Windows).
